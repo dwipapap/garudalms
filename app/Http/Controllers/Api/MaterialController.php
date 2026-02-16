@@ -13,12 +13,6 @@ class MaterialController extends Controller
 {
     public function store(Request $request)
     {
-        if ($request->user()->role !== 'dosen') {
-            return response()->json([
-                'message' => 'Forbidden. Only lecturers can upload materials.'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'course_id' => 'required|exists:courses,id',
             'title' => 'required|string|max:255',
@@ -84,14 +78,14 @@ class MaterialController extends Controller
             }
         }
 
-        $filePath = storage_path('app/public/' . $material->file_path);
-
-        if (!file_exists($filePath)) {
+        if (!Storage::disk('public')->exists($material->file_path)) {
             return response()->json([
                 'message' => 'File not found on server'
             ], 404);
         }
 
-        return response()->download($filePath, $material->title);
+        $filePath = Storage::disk('public')->path($material->file_path);
+
+        return response()->download($filePath, basename($material->file_path));
     }
 }

@@ -15,12 +15,6 @@ class AssignmentSubmissionController extends Controller
 // Assignments
     public function createAssignment(Request $request)
     {
-        if ($request->user()->role !== 'dosen') {
-            return response()->json([
-                'message' => 'Forbidden. Only lecturers can create assignments.'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'course_id' => 'required|exists:courses,id',
             'title' => 'required|string|max:255',
@@ -59,12 +53,6 @@ class AssignmentSubmissionController extends Controller
 //submit assignment
     public function submitAssignment(Request $request)
     {
-        if ($request->user()->role !== 'mahasiswa') {
-            return response()->json([
-                'message' => 'Forbidden. Only students can submit assignments.'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'assignment_id' => 'required|exists:assignments,id',
             'file' => 'required|file|mimes:pdf,doc,docx,txt,zip|max:10240',
@@ -122,12 +110,6 @@ class AssignmentSubmissionController extends Controller
 //grade submission
     public function gradeSubmission(Request $request, $id)
     {
-        if ($request->user()->role !== 'dosen') {
-            return response()->json([
-                'message' => 'Forbidden. Only lecturers can grade submissions.'
-            ], 403);
-        }
-
         $validator = Validator::make($request->all(), [
             'score' => 'required|integer|min:0|max:100',
         ]);

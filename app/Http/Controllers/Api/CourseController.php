@@ -20,11 +20,6 @@ class CourseController extends Controller
 
     public function store(Request $request)
     {
-        if ($request->user()->role !== 'dosen') {
-            return response()->json([
-                'message' => 'bukan dosen luwh, gaboleh'
-            ], 403);
-        }
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -53,12 +48,12 @@ class CourseController extends Controller
             return response()->json([
                 'message' => 'Course not found'
             ], 404);
-    }
-    if ($request->user()->role !== 'dosen' || $course->lecturer_id !== $request->user()->id) {
-        return response()->json([
-            'message' => 'gaboleh'
-        ], 403);
-    }
+        }
+        if ($course->lecturer_id !== $request->user()->id) {
+            return response()->json([
+                'message' => 'Forbidden. You can only update your own courses.'
+            ], 403);
+        }
     $validator = Validator::make($request->all(), [
         'name' => 'required|string|max:255',
         'description' => 'nullable|string',
@@ -85,10 +80,11 @@ class CourseController extends Controller
                 'message' => 'Course not found'
             ], 404); }
 
-        if ($request->user()->role !== 'dosen' || $course->lecturer_id !== $request->user()->id) {
+        if ($course->lecturer_id !== $request->user()->id) {
             return response()->json([
-                'message' => 'error, cumna boleh  delete courses punya kamu sendiri'
-            ], 403); }
+                'message' => 'Forbidden. You can only delete your own courses.'
+            ], 403);
+        }
             $course->delete();
             return response()->json([
                 'message' => 'Course deleted successfully'
@@ -98,12 +94,6 @@ class CourseController extends Controller
     //enroll student to course
     public function enroll(Request $request, $id)
     {
-              if ($request->user()->role !== 'mahasiswa') {
-            return response()->json([
-                'message' => 'Cuma mahasewa boleh enroll'
-            ], 403);
-        }
-
         $course = Course::find($id);
 
         if (!$course) {
