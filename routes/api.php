@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\AuthController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\MaterialController;
+use App\Http\Controllers\Api\AssignmentSubmissionController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -20,4 +21,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::post('/materials', [MaterialController::class, 'store']);
     Route::get('/materials/{id}/download', [MaterialController::class, 'download']);
+
+    
+    Route::post('/assignments', [AssignmentSubmissionController::class, 'createAssignment']);
+    Route::post('/submissions', [AssignmentSubmissionController::class, 'submitAssignment']);
+    Route::put('/submissions/{id}/grade', [AssignmentSubmissionController::class, 'gradeSubmission']);
 });
