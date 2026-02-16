@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CourseController;
 use App\Http\Controllers\Api\MaterialController;
 use App\Http\Controllers\Api\AssignmentSubmissionController;
+use App\Http\Controllers\Api\DiscussionController;
+use App\Http\Controllers\Api\ReportsController;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
@@ -16,6 +18,8 @@ Route::middleware('auth:sanctum')->group(function () {
     // Any authenticated user
     Route::get('/courses', [CourseController::class, 'index']);
     Route::get('/materials/{id}/download', [MaterialController::class, 'download']);
+    Route::post('/discussions', [DiscussionController::class, 'store']);
+    Route::post('/discussions/{id}/reply', [DiscussionController::class, 'reply']);
 
     // Dosen
     Route::middleware('role:dosen')->group(function () {
@@ -25,6 +29,10 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::post('/materials', [MaterialController::class, 'store']);
         Route::post('/assignments', [AssignmentSubmissionController::class, 'createAssignment']);
         Route::put('/submissions/{id}/grade', [AssignmentSubmissionController::class, 'gradeSubmission']);
+
+        Route::get('/reports/courses', [ReportsController::class, 'courseStats']);
+        Route::get('/reports/assignments', [ReportsController::class, 'assignmentStats']);
+        Route::get('/reports/students/{id}', [ReportsController::class, 'studentStats']);
     });
 
     // Mahasiswa
