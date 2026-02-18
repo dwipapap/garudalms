@@ -22,7 +22,7 @@ class MaterialController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'message' => 'Validation error',
-                'errors' => $validator->errors()
+                'errors' => $validator->errors(),
             ], 422);
         }
 
@@ -30,12 +30,12 @@ class MaterialController extends Controller
 
         if ($course->lecturer_id !== $request->user()->id) {
             return response()->json([
-                'message' => 'Forbidden. You can only upload to your own courses.'
+                'message' => 'Forbidden. You can only upload to your own courses.',
             ], 403);
         }
 
         $file = $request->file('file');
-        $fileName = time() . '_' . $file->getClientOriginalName();
+        $fileName = time().'_'.$file->getClientOriginalName();
         $filePath = $file->storeAs('materials', $fileName, 'public');
 
         $material = Material::create([
@@ -46,18 +46,18 @@ class MaterialController extends Controller
 
         return response()->json([
             'message' => 'Material uploaded successfully',
-            'data' => $material
+            'data' => $material,
         ], 201);
     }
 
-// Dpwmnload material
+    // Download material
     public function download(Request $request, $id)
     {
         $material = Material::find($id);
 
-        if (!$material) {
+        if (! $material) {
             return response()->json([
-                'message' => 'Material not found'
+                'message' => 'Material not found',
             ], 404);
         }
 
@@ -65,22 +65,22 @@ class MaterialController extends Controller
         $course = $material->course;
 
         if ($user->role === 'mahasiswa') {
-            if (!$course->students()->where('student_id', $user->id)->exists()) {
+            if (! $course->students()->where('student_id', $user->id)->exists()) {
                 return response()->json([
-                    'message' => 'Forbidden. You must be enrolled in this course.'
+                    'message' => 'Forbidden. You must be enrolled in this course.',
                 ], 403);
             }
         } elseif ($user->role === 'dosen') {
             if ($course->lecturer_id !== $user->id) {
                 return response()->json([
-                    'message' => 'Forbidden. This is not your course.'
+                    'message' => 'Forbidden. This is not your course.',
                 ], 403);
             }
         }
 
-        if (!Storage::disk('public')->exists($material->file_path)) {
+        if (! Storage::disk('public')->exists($material->file_path)) {
             return response()->json([
-                'message' => 'File not found on server'
+                'message' => 'File not found on server',
             ], 404);
         }
 
