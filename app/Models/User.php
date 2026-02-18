@@ -33,7 +33,7 @@ class User extends Authenticatable
         return $this->hasMany(Course::class, 'lecturer_id');
     }
 
-    //ini mahasiswanya
+    // ini mahasiswanya
     public function enrolledCourses()
     {
         return $this->belongsToMany(Course::class, 'course_student', 'student_id', 'course_id');
@@ -52,5 +52,10 @@ class User extends Authenticatable
     public function replies()
     {
         return $this->hasMany(Reply::class);
+    }
+
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
     }
 }
