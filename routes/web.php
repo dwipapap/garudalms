@@ -9,26 +9,29 @@ Route::get('/', function () {
 
 // Guest-only routes (auth not required)
 Route::middleware('guest')->group(function () {
-    Route::get('/login', function () {
-        return view('livewire.auth.login');
-    })->name('login');
+    Route::get('/login', \App\Livewire\Auth\Login::class)->name('login');
 
-    Route::get('/register', function () {
-        return view('livewire.auth.register');
-    })->name('register');
+    Route::get('/register', \App\Livewire\Auth\Register::class)->name('register');
 });
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
+    // Logout
+    Route::post('/logout', function () {
+        Illuminate\Support\Facades\Auth::logout();
+        request()->session()->invalidate();
+        request()->session()->regenerateToken();
+
+        return redirect('/');
+    })->name('logout');
+
     // Dashboard
     Route::get('/dashboard', \App\Livewire\Dashboard::class)->name('dashboard');
 
     // Courses
     Route::get('/courses', \App\Livewire\Courses\Index::class)->name('courses.index');
 
-    Route::get('/courses/{id}', function ($id) {
-        return view('livewire.courses.show', ['id' => $id]);
-    })->name('courses.show');
+    Route::get('/courses/{id}', \App\Livewire\Courses\Show::class)->name('courses.show');
 
     // Create and edit courses (dosen only)
     Route::middleware('role:dosen')->group(function () {
@@ -41,15 +44,10 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware('role:dosen')->group(function () {
         Route::get('/materials/create', \App\Livewire\Materials\Create::class)->name('materials.create');
+        Route::get('/materials/{id}/edit', \App\Livewire\Materials\Edit::class)->name('materials.edit');
     });
 
-    Route::get('/materials/{id}', function ($id) {
-        return view('livewire.materials.show', ['id' => $id]);
-    })->name('materials.show');
-
-    Route::get('/materials/{id}/edit', function ($id) {
-        return view('livewire.materials.edit', ['id' => $id]);
-    })->name('materials.edit');
+    Route::get('/materials/{id}', \App\Livewire\Materials\Show::class)->name('materials.show');
 
     // Assignments
     Route::get('/assignments', \App\Livewire\Assignments\Index::class)->name('assignments.index');
@@ -66,16 +64,12 @@ Route::middleware('auth')->group(function () {
 
     // Reports (dosen only)
     Route::middleware('role:dosen')->group(function () {
-        Route::get('/reports', function () {
-            return view('livewire.reports.index');
-        })->name('reports.index');
+        Route::get('/reports', \App\Livewire\Reports\Index::class)->name('reports.index');
 
         Route::get('/reports/courses', \App\Livewire\Reports\Courses::class)->name('reports.courses');
 
         Route::get('/reports/assignments', \App\Livewire\Reports\Assignments::class)->name('reports.assignments');
 
-        Route::get('/reports/students/{id}', function ($id) {
-            return view('livewire.reports.students', ['id' => $id]);
-        })->name('reports.students');
+        Route::get('/reports/students/{id}', \App\Livewire\Reports\Students::class)->name('reports.students');
     });
 });
