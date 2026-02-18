@@ -19,7 +19,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/courses', [CourseController::class, 'index']);
     Route::get('/materials/{id}/download', [MaterialController::class, 'download']);
     Route::post('/discussions', [DiscussionController::class, 'store']);
-    Route::post('/discussions/{id}/reply', [DiscussionController::class, 'reply']);
+    Route::post('/discussions/{id}/replies', [DiscussionController::class, 'reply']);
 
     // Dosen
     Route::middleware('role:dosen')->group(function () {
@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::delete('/courses/{id}', [CourseController::class, 'destroy']);
         Route::post('/materials', [MaterialController::class, 'store']);
         Route::post('/assignments', [AssignmentSubmissionController::class, 'createAssignment']);
-        Route::put('/submissions/{id}/grade', [AssignmentSubmissionController::class, 'gradeSubmission']);
+        Route::post('/submissions/{id}/grade', [AssignmentSubmissionController::class, 'gradeSubmission']);
 
         Route::get('/reports/courses', [ReportsController::class, 'courseStats']);
         Route::get('/reports/assignments', [ReportsController::class, 'assignmentStats']);
