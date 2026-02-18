@@ -2,11 +2,11 @@
     <!-- Header -->
     <div class="flex items-center justify-between">
         <div>
-            <h1 class="text-2xl font-bold text-gray-800">Forum</h1>
+            <h1 class="text-2xl font-bold text-gray-800">Forum Discussion</h1>
             @if($course)
                 <p class="text-sm text-gray-500 mt-1">{{ $course->name }}</p>
             @else
-                <p class="text-sm text-gray-500 mt-1">Semua course Anda</p>
+                <p class="text-sm text-gray-500 mt-1">Discussions from your courses</p>
             @endif
         </div>
         @if($course)
@@ -20,33 +20,53 @@
         @endif
     </div>
 
-    <!-- New Discussion Form (only when viewing a specific course) -->
-    @if($course)
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-4">New Discussion</h2>
-            <form wire:submit="createDiscussion">
+    <!-- New Discussion Form -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-semibold text-gray-800 mb-4">New Discussion</h2>
+        <form wire:submit="createDiscussion" class="space-y-4">
+            @if(! $course)
+                <div>
+                    <label for="course_id" class="block text-sm font-medium text-gray-700 mb-1">Select Course</label>
+                    <select 
+                        wire:model="selectedCourseId"
+                        id="course_id"
+                        class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                        <option value="">Choose a course...</option>
+                        @foreach($availableCourses as $c)
+                            <option value="{{ $c->id }}">{{ $c->name }}</option>
+                        @endforeach
+                    </select>
+                    @error('selectedCourseId')
+                        <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                    @enderror
+                </div>
+            @endif
+
+            <div>
                 <textarea
                     wire:model="newDiscussionContent"
                     rows="3"
-                    placeholder="Start a new discussion..."
+                    placeholder="What would you like to discuss?"
                     class="w-full border border-gray-300 rounded-md px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 ></textarea>
                 @error('newDiscussionContent')
                     <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
                 @enderror
-                <div class="mt-3 flex justify-end">
-                    <button
-                        type="submit"
-                        wire:loading.attr="disabled"
-                        class="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50"
-                    >
-                        <span wire:loading.remove wire:target="createDiscussion">Post Discussion</span>
-                        <span wire:loading wire:target="createDiscussion">Posting...</span>
-                    </button>
-                </div>
-            </form>
-        </div>
-    @endif
+            </div>
+
+            <div class="flex justify-end pt-2">
+                <button
+                    type="submit"
+                    wire:loading.attr="disabled"
+                    class="px-6 py-2 bg-blue-600 text-white text-sm font-medium rounded-full hover:bg-blue-700 transition-colors disabled:opacity-50"
+                >
+                    <span wire:loading.remove wire:target="createDiscussion">Post Discussion</span>
+                    <span wire:loading wire:target="createDiscussion">Posting...</span>
+                </button>
+            </div>
+        </form>
+    </div>
 
     <!-- Discussion List -->
     @if($discussions->isEmpty())
