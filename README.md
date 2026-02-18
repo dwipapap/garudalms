@@ -57,6 +57,42 @@ php artisan serve
 
 URL: `http://127.0.0.1:8000`
 
+## Frontend (Livewire)
+
+The application includes a full Livewire-powered web interface.
+
+### Accessing the Frontend
+
+1. Start the server: `php artisan serve`
+2. Visit: `http://127.0.0.1:8000`
+3. Login or register to access the dashboard
+
+### Features
+
+**Dosen (Lecturer) can:**
+- Create and manage courses
+- Upload learning materials (PDF)
+- Create assignments with deadlines
+- Grade student submissions
+- View reports and statistics
+- Participate in course discussions
+
+**Mahasiswa (Student) can:**
+- Browse and enroll in courses
+- Download course materials
+- Submit assignments
+- View grades and feedback
+- Participate in course discussions
+
+### Test Accounts
+
+After seeding, you can login with:
+- Dosen: budi.santoso@example.com / password
+- Dosen: ani.wijaya@example.com / password
+- Mahasiswa: rudi.hartono@example.com / password
+- Mahasiswa: siti.nurhaliza@example.com / password
+- Mahasiswa: ahmad.dahlan@example.com / password
+
 ## Autentikasi API
 
 - Login/registrasi akan mengembalikan token Sanctum.
@@ -106,7 +142,3 @@ endpoint prefix `/api`.
 - `GET /reports/courses` - Statistik jumlah mahasiswa per mata kuliah.
 - `GET /reports/assignments` - Statistik tugas sudah/belum dinilai.
 - `GET /reports/students/{id}` - Statistik tugas dan nilai mahasiswa.
-
-## WIP
-
-Bikin frontendnya (Permintaan pada soal Interview tidak menjelaskan untuk membuat frontend juga atau nggak. soal di interview berfokus pada backend semuah)
