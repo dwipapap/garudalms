@@ -63,7 +63,7 @@ class Dashboard extends Component
 
     private function renderMahasiswaDashboard($user)
     {
-        $enrolledCourseIds = $user->enrolledCourses()->pluck('id')->toArray();
+        $enrolledCourseIds = $user->enrolledCourses()->pluck('courses.id')->toArray();
         $submittedAssignmentIds = $user->submissions()->pluck('assignment_id')->toArray();
 
         $stats = [
